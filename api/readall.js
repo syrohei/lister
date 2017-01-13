@@ -2,6 +2,8 @@
 
 const AWS = require('aws-sdk');
 const dynamoDb = new AWS.DynamoDB.DocumentClient();
+const _ = require('lodash');
+
 
 module.exports = (event, callback) => {
   const params = {
@@ -12,6 +14,8 @@ module.exports = (event, callback) => {
     if (error) {
       callback(error);
     }
-    callback(error, data.Items);
+    const sortedItems = _.sortBy(data.Items, (item) => -Number(item.timestamp))
+
+    callback(error, sortedItems);
   });
 };

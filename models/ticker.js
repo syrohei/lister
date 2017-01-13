@@ -28,10 +28,7 @@ module.exports.findTicker = (params) => {
       })
       .then((response) => {
         if (!response.Items) return Promise.reject('Ticker is not found');
-        if (response.Count > 0) {
-          resolve(response)
-
-        }
+        resolve(response)
       })
   })
 }
@@ -39,26 +36,16 @@ module.exports.findTicker = (params) => {
 module.exports.updateTicker = (item) => {
   return new Promise((resolve, reject) => {
     db('put', {
-        TableName: tickersTable,
-        Item: item
-      })
-      .then(() => invoke('timeout', {
-        item,
-        delay: 70
-      })) // no actual delay here
-      // if we pass a callback it will run synchronously, so we'll get a response
-      .then(() => invoke('timeout', {
-        item,
-        delay: 50
-      }, (response) => {
-        // this should be delayed for 50ms
-        // let's do something with the response
-        if (response.result === 'success') {
-          console.log("save ticker success, response data:", response);
-        } else {
-          return Promise.reject(new Error("Something went wrong :("));
-        }
-      }))
-      .then(() => resolve(item));
+      TableName: tickersTable,
+      Item: item
+    }, (response) => {
+      // this should be delayed for 50ms
+      // let's do something with the response
+      if (response.result === 'success') {
+        console.log("save ticker success, response data:", response);
+      } else {
+        return Promise.reject(new Error("Something went wrong :("));
+      }
+    }).then(() => resolve(item));
   })
 }

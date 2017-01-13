@@ -67,4 +67,4 @@ const exchange_worker = (exchange_name, term) => {
 }
 
 
-exchange_worker('coincheck', '60')
+exchange_worker('btcbox', '60')

@@ -56,12 +56,12 @@ const exchange_worker = (exchange_name, term) => {
     }).then((result) => {
       setTimeout(() => {
         exchange_worker(exchange_name, term)
-      }, 500)
+      }, 1500)
     }).catch((err) => {
       console.log(err);
       setTimeout(() => {
         exchange_worker(exchange_name, term)
-      }, 500)
+      }, 1500)
     })
   })
 }

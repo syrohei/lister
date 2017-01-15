@@ -5,7 +5,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "btcbox": "AWS_REGION=us-east-1 TICKER_TABLE=tickers node worker/btcbox.js",
-    "coincheck": "AWS_REGION=us-east-1 TICKER_TABLE=tickers node worker/coincheck.js"
+    "coincheck": "AWS_REGION=us-east-1 TICKER_TABLE=tickers node worker/coincheck.js",
+    "quoine": "AWS_REGION=us-east-1 TICKER_TABLE=tickers node worker/quoine.js"
   },
   "author": "",
   "license": "MIT",

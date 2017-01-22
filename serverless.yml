@@ -3,7 +3,7 @@ service: serverless-crud
 provider:
   name: aws
   runtime: nodejs4.3
-  region: us-east-1
+  region: ap-northeast-1
   stage: dev
   iamRoleStatements:
     - Effect: Allow
@@ -15,48 +15,67 @@ provider:
         - dynamodb:PutItem
         - dynamodb:UpdateItem
         - dynamodb:DeleteItem
-      Resource: "arn:aws:dynamodb:us-east-1:*:*"
+      Resource: "arn:aws:dynamodb:ap-northeast-1:*:*"
 
 functions:
+  increment_create:
+    handler: handler.increments_create
+    events:
+      - http:
+          path: todoss
+          method: post
+          cors: true
+
+  increment_readAll:
+    handler: handler.increments_readAll
+    events:
+      - http:
+          path: todoss
+          method: get
+          cors: true
+
   create:
-    handler: handler.create
+    handler: handler.tickers_create
     events:
       - http:
           path: todos
           method: post
           cors: true
   readAll:
-    handler: handler.readAll
+    handler: handler.tickers_readAll
     events:
       - http:
-          path: todos
+          path: tickers
           method: get
           cors: true
+
   readOne:
-    handler: handler.readOne
+    handler: handler.tickers_readOne
     events:
       - http:
-          path: todos/{id}
+          path: exchanges/{exchange_name}
           method: get
           cors: true
   update:
-    handler: handler.update
+    handler: handler.tickers_update
     events:
       - http:
           path: todos/{id}
           method: put
           cors: true
   delete:
-    handler: handler.delete
+    handler: handler.tickers_delete
     events:
       - http:
           path: todos/{id}
           method: delete
           cors: true
 
+
+
 resources:
   Resources:
-    TodosDynamoDbTable:
+    TickersTable:
       Type: 'AWS::DynamoDB::Table'
       DeletionPolicy: Retain
       Properties:
@@ -65,17 +84,47 @@ resources:
             AttributeName: exchange_name
             AttributeType: S
           -
-            AttributeName: timestamp
+            AttributeName: createdAt
             AttributeType: S
+
         KeySchema:
           -
             AttributeName: exchange_name
             KeyType: HASH
           -
-            AttributeName: timestamp
+            AttributeName: createdAt
             KeyType: RANGE
+
 
         ProvisionedThroughput:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
         TableName: 'tickers'
+
+    IncrementTable:
+      Type: 'AWS::DynamoDB::Table'
+      DeletionPolicy: Retain
+      Properties:
+        AttributeDefinitions:
+          -
+            AttributeName: pkey
+            AttributeType: S
+          -
+            AttributeName: createdAt
+            AttributeType: S
+
+
+        KeySchema:
+          -
+            AttributeName: pkey
+            KeyType: HASH
+
+          -
+            AttributeName: createdAt
+            KeyType: RANGE
+
+
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TableName: 'increments'

@@ -5,7 +5,7 @@ const dynamoDb = new AWS.DynamoDB.DocumentClient();
 const uuid = require('uuid');
 const moment = require('moment')
 
-module.exports = (event, callback) => {
+module.exports = (table, event, callback) => {
   console.log(event.body);
   const data = event.body;
 
@@ -23,7 +23,7 @@ module.exports = (event, callback) => {
   }
 
   const params = {
-    TableName: 'tickers',
+    TableName: table,
     Item: newItem
   };
 

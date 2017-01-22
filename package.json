@@ -4,9 +4,9 @@
   "description": "Serverless CRUD service",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "btcbox": "AWS_REGION=us-east-1 TICKER_TABLE=tickers node worker/btcbox.js",
-    "coincheck": "AWS_REGION=us-east-1 TICKER_TABLE=tickers node worker/coincheck.js",
-    "quoine": "AWS_REGION=us-east-1 TICKER_TABLE=tickers node worker/quoine.js"
+    "btcbox": "AWS_REGION=ap-northeast-1 TICKER_TABLE=tickers node worker/btcbox.js",
+    "coincheck": "AWS_REGION=ap-northeast-1 TICKER_TABLE=tickers INCREMENT_TABLE=increments node worker/coincheck.js",
+    "quoine": "AWS_REGION=ap-northeast-1 TICKER_TABLE=tickers INCREMENT_TABLE=increments node worker/quoine.js"
   },
   "author": "",
   "license": "MIT",

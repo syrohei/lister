@@ -1,4 +1,6 @@
 const ticker = require('../models/ticker.js');
+const increment = require('../models/increment.js');
+
 const btcbox = require('../lib/exchanges/btcbox.js')
 const coincheck = require('../lib/exchanges/coincheck.js')
 const moment = require('moment')
@@ -13,7 +15,7 @@ const ex = {
   'coincheck': coincheck
 }
 
-const RecreateData = (exchange_name, term, ask, tickers) => {
+const RecreateData = (params, ask, tickers) => {
   if (tickers.Count > 0) {
     const updateItem = _.sortBy(tickers.Items, 'timestamp').pop()
     updateItem.close = ask
@@ -23,36 +25,45 @@ const RecreateData = (exchange_name, term, ask, tickers) => {
     if (updateItem.low > ask) {
       updateItem.low = ask
     }
-    console.log("update", updateItem.timestamp);
+    console.log("update", updateItem.createdAt);
     return updateItem
   } else {
     const now = moment().unix()
-    const _exchange_name = exchange_name + "_" + term + "s"
+    const _exchange_name = params.exchange_name + "_" + params.term + "s#" + params.increment.partition
     const newItem = {
       exchange_name: _exchange_name,
-      term: term,
-      timestamp: String(now),
+      term: params.term,
+      createdAt: String(now),
       high: String(ask),
       low: String(ask),
       open: String(ask),
       close: String(ask)
     }
-    console.log("newcreate", newItem.timestamp);
+    console.log("newcreate", newItem.createdAt);
 
     return newItem
   }
 }
 
 const exchange_worker = (exchange_name, term) => {
-  ex[exchange_name].getAsk().then((ask) => {
-    ticker.findTicker({
-      exchange_name: exchange_name,
-      term: term
-    }).then((tickers) => {
-      const data = RecreateData(exchange_name, term, ask, tickers)
-      console.log(data);
+  const params = {
+    exchange_name: exchange_name,
+    term: term
+  }
 
-      return ticker.updateTicker(data)
+  ex[exchange_name].getAsk().then((ask) => {
+    increment.findIncrement("increments", params).then((result) => {
+      params.increment = result.Items.pop()
+      return ticker.findTicker("tickers", params)
+    }).then((tickers) => {
+      const data = RecreateData(params, String(ask), tickers)
+      return ticker.updateTicker("tickers", data)
+    }).then((result) => {
+      console.log(result);
+      if (result.createdAt > 3600 + Number(params.increment.createdAt))
+        return increment.updateIncrement("increments", params)
+
+
     }).then((result) => {
       setTimeout(() => {
         exchange_worker(exchange_name, term)
@@ -63,7 +74,7 @@ const exchange_worker = (exchange_name, term) => {
         exchange_worker(exchange_name, term)
       }, 1500)
     })
-  })
+  }).catch((err) => console.log)
 }
 
 

@@ -2,8 +2,8 @@
 
 const Api = require('./api/index.js')
 
-module.exports.create = (event, context, callback) => {
-  Api.Create(event, (error, result) => {
+module.exports.tickers_create = (event, context, callback) => {
+  Api.tickers.Create("tickers", event, (error, result) => {
     const response = {
       statusCode: 200,
       headers: {
@@ -16,8 +16,8 @@ module.exports.create = (event, context, callback) => {
   });
 };
 
-module.exports.readAll = (event, context, callback) => {
-  Api.ReadAll(event, (error, result) => {
+module.exports.tickers_readAll = (event, context, callback) => {
+  Api.tickers.ReadAll("tickers", event, (error, result) => {
     const response = {
       statusCode: 200,
       headers: {
@@ -30,8 +30,8 @@ module.exports.readAll = (event, context, callback) => {
   });
 };
 
-module.exports.readOne = (event, context, callback) => {
-  Api.ReadOne(event, (error, result) => {
+module.exports.tickers_readOne = (event, context, callback) => {
+  Api.tickers.ReadOne("tickers", event, (error, result) => {
     const response = {
       statusCode: 200,
       headers: {
@@ -44,8 +44,8 @@ module.exports.readOne = (event, context, callback) => {
   });
 };
 
-module.exports.update = (event, context, callback) => {
-  Api.Update(event, (error, result) => {
+module.exports.tickers_update = (event, context, callback) => {
+  Api.tickers.Update("tickers", event, (error, result) => {
     const response = {
       statusCode: 200,
       headers: {
@@ -58,8 +58,37 @@ module.exports.update = (event, context, callback) => {
   });
 };
 
-module.exports.delete = (event, context, callback) => {
-  Api.Delete(event, (error, result) => {
+module.exports.tickers_delete = ( event, context, callback) => {
+  Api.tickers.Delete("tickers",event, (error, result) => {
+    const response = {
+      statusCode: 200,
+      headers: {
+        "Access-Control-Allow-Origin": "*"
+      },
+      body: JSON.stringify(result, null, "\t"),
+    };
+
+    context.succeed(response);
+  });
+};
+
+module.exports.increments_create = (event, context, callback) => {
+  Api.increments.Create("increments", event, (error, result) => {
+    const response = {
+      statusCode: 200,
+      headers: {
+        "Access-Control-Allow-Origin": "*"
+      },
+      body: JSON.stringify(result, null, "\t"),
+    };
+
+    context.succeed(response);
+  });
+};
+
+
+module.exports.increments_readAll = (event, context, callback) => {
+  Api.increments.ReadAll("increments", event, (error, result) => {
     const response = {
       statusCode: 200,
       headers: {

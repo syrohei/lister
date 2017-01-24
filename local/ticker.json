@@ -1,0 +1,28 @@
+{
+    "Table": {
+        "TableName": "tickers",
+        "KeySchema": [{
+            "AttributeName": "exchange_name",
+            "KeyType": "HASH"
+        }, {
+            "AttributeName": "createdAt",
+            "KeyType": "RANGE"
+        }],
+        "AttributeDefinitions": [{
+            "AttributeName": "exchange_name",
+            "AttributeType": "S"
+        }, {
+            "AttributeName": "createdAt",
+            "AttributeType": "S"
+        }],
+        "ProvisionedThroughput": {
+            "ReadCapacityUnits": 1,
+            "WriteCapacityUnits": 1
+        }
+    },
+    "Seeds": [{
+        "exchange_name": "coincheck_BTCJPY_60s#1",
+        "createdAt": "1482418800",
+        "open": "0.002"
+    }]
+}

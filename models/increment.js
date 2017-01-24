@@ -8,7 +8,7 @@ const moment = require('moment')
 module.exports.findIncrement = (table, params) => {
   return new Promise((resolve, reject) => {
     const now = moment().unix()
-    const exchange_name = params.exchange_name + "_" + params.term + "s";
+    const exchange_name = params.exchange_name + "_" + params.currency_pair + "_" + params.term + "s";
     db('query', {
         TableName: table,
         KeyConditions: {
@@ -31,7 +31,7 @@ module.exports.findIncrement = (table, params) => {
 module.exports.updateIncrement = (table, params) => {
   return new Promise((resolve, reject) => {
     const now = moment().unix()
-    const exchange_name = params.exchange_name + "_" + params.term + "s"
+    const exchange_name = params.exchange_name + "_" + params.currency_pair + "_" + params.term + "s"
     const newItem = {
       pkey: exchange_name,
       partition: String(Number(params.increment.partition )+1),

@@ -15,6 +15,9 @@ const sanitizer = (query) => {
 
   if (!query.last)
     query.last = "default"
+
+  if (!query.pair)
+    query.pair = "BTCJPY"
   return query
 }
 

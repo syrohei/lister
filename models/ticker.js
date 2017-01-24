@@ -9,7 +9,7 @@ const tickersTable = process.env.TICKER_TABLE
 module.exports.findTicker = (table, params) => {
   return new Promise((resolve, reject) => {
     const now = moment().unix()
-    const exchange_name = params.exchange_name + "_" + params.term + "s#" + params.increment.partition;
+    const exchange_name = params.exchange_name + "_" + params.currency_pair + "_" + params.term + "s#" + params.increment.partition;
     db('query', {
         TableName: table,
         KeyConditions: {
@@ -57,7 +57,7 @@ module.exports.getAll = (table, query) => {
     const now = moment().unix()
     const since = query.since == "default" ? String(now - 3600 * 24) : query.since
     const last = query.last == "default" ? String(now) : query.last
-    const exchange_name = query.exchange_name + "_" + query.term + "s#" + query.increment.partition;
+    const exchange_name = query.exchange_name + "_" + query.currency_pair + "_" + query.term + "s#" + query.increment.partition;
 
     return db('query', {
       TableName: table,

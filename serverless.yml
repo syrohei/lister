@@ -1,4 +1,15 @@
 service: serverless-crud
+plugins:
+ - serverless-dynamodb-local
+ - serverless-offline
+custom:
+  dynamodb:
+    start:
+      port: 8000
+      inMemory: true
+      migration: true
+    migration:
+      dir: ./local
 
 provider:
   name: aws
@@ -53,7 +64,7 @@ functions:
     handler: handler.tickers_readOne
     events:
       - http:
-          path: exchanges/{exchange_name}
+          path: tickers/{currency_pair}
           method: get
           cors: true
   update:

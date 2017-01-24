@@ -15,7 +15,7 @@ const ex = {
   'coincheck': coincheck
 }
 
-const RecreateData = (params, ask, tickers) => {
+const RecreateData = (params, ask, tickers, currency_pair) => {
   if (tickers.Count > 0) {
     const updateItem = _.sortBy(tickers.Items, 'timestamp').pop()
     updateItem.close = ask
@@ -29,11 +29,12 @@ const RecreateData = (params, ask, tickers) => {
     return updateItem
   } else {
     const now = moment().unix()
-    const _exchange_name = params.exchange_name + "_" + params.term + "s#" + params.increment.partition
+    const _exchange_name = params.exchange_name + "_" + currency_pair +  "_" + params.term + "s#" + params.increment.partition
     const newItem = {
       exchange_name: _exchange_name,
       term: params.term,
       createdAt: String(now),
+      currency_pair: currency_pair,
       high: String(ask),
       low: String(ask),
       open: String(ask),
@@ -45,7 +46,7 @@ const RecreateData = (params, ask, tickers) => {
   }
 }
 
-const exchange_worker = (exchange_name, term) => {
+const exchange_worker = (exchange_name, term, currency_pair) => {
   const params = {
     exchange_name: exchange_name,
     term: term
@@ -56,7 +57,7 @@ const exchange_worker = (exchange_name, term) => {
       params.increment = result.Items.pop()
       return ticker.findTicker("tickers", params)
     }).then((tickers) => {
-      const data = RecreateData(params, String(ask), tickers)
+      const data = RecreateData(params, String(ask), tickers, currency_pair)
       return ticker.updateTicker("tickers", data)
     }).then((result) => {
       console.log(result);
@@ -78,4 +79,4 @@ const exchange_worker = (exchange_name, term) => {
 }
 
 
-exchange_worker('coincheck', '60')
+exchange_worker('coincheck', '60', "BTCJPY")
